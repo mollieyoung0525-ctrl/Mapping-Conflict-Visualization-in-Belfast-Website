@@ -1,0 +1,53 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "Name": "Belfast peace walls",
+        "Date": "1969\u2013present",
+        "Description": "The main concentration of Belfast's peace walls, and the primary site of muralism. This is the MAIN place.",
+        "type": "within"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.95298,
+          54.60128
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "Name": "Derry / Londonderry",
+        "Date": "",
+        "Description": "Peace walls and interface barriers in Derry/Londonderry, connected to the Belfast story.",
+        "type": "connected"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -7.30504,
+          54.9868
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "Name": "Portadown",
+        "Date": "",
+        "Description": "Peace walls in Portadown, part of the wider landscape of division beyond Belfast.",
+        "type": "connected"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -6.41096,
+          54.43566
+        ]
+      }
+    }
+  ]
+}
