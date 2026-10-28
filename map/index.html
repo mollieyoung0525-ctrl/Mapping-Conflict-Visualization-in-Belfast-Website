@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mapping Conflict Visualization in Belfast</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    html, body { margin:0; height:100%; font-family:'Helvetica Neue',system-ui,sans-serif; }
+    #map { height:100%; width:100%; background:#0b1020; }
+    .title-card{ position:absolute; top:16px; left:16px; z-index:1000; background:rgba(10,14,28,0.86); color:#fff; padding:15px 18px; border-radius:10px; max-width:300px; border:1px solid rgba(255,255,255,0.18); box-shadow:0 4px 30px rgba(0,0,0,0.7); }
+    .title-card h1{ margin:0 0 6px; font-size:1.15rem; }
+    .title-card p{ margin:0; font-size:0.8rem; color:#cdd8f0; line-height:1.5; }
+    .legend{ position:absolute; top:16px; right:16px; z-index:1000; background:rgba(10,14,28,0.86); color:#eaf0ff; padding:14px 16px; border-radius:10px; border:1px solid rgba(255,255,255,0.18); font-size:0.84rem; }
+    .legend h2{ margin:0 0 10px; font-size:0.78rem; text-transform:uppercase; letter-spacing:0.08em; color:#9fb3d9; }
+    .legend .row{ display:flex; align-items:center; gap:10px; margin:7px 0; }
+    .legend .sw{ width:24px; height:0; flex:none; }
+    .legend .wall{ border-top:5px solid #ff8a3d; }
+    .legend .mainwall{ border-top:6px solid #c04dff; }
+    .legend .citydot{ width:16px; height:16px; border-radius:50%; background:#c04dff; border:2px solid #fff; flex:none; }
+    .legend .conn{ border-top:4px dashed #00e5ff; }
+    .num-icon{ display:flex; align-items:center; justify-content:center; width:24px; height:24px; border-radius:50%; background:#ff8a3d; color:#0b1020; font-weight:700; font-size:0.76rem; border:2px solid #fff; cursor:pointer; }
+    .num-icon.main{ background:#c04dff; }
+    .leaflet-popup-content-wrapper{ background:#121831; color:#eaf0ff; border-radius:8px; }
+    .leaflet-popup-tip{ background:#121831; }
+    .leaflet-popup-content{ margin:0; }
+    .pop{ width:230px; }
+    .pop .hdr{ padding:11px 15px; border-radius:8px 8px 0 0; }
+    .pop .hdr.main{ background:linear-gradient(135deg,#c04dff,#7a2fb0); }
+    .pop .hdr.wall{ background:linear-gradient(135deg,#ff8a3d,#c0552a); }
+    .pop .hdr .name{ font-size:1.05rem; font-weight:700; color:#fff; }
+    .pop .body{ padding:12px 15px; }
+    .pop .desc{ font-size:0.88rem; line-height:1.5; color:#dfe7f7; }
+    .reset-btn{ position:absolute; bottom:24px; left:16px; z-index:1000; background:rgba(10,14,28,0.86); color:#eaf0ff; border:1px solid rgba(255,255,255,0.18); border-radius:8px; padding:8px 14px; cursor:pointer; font-size:0.82rem; }
+    @keyframes flow { to { stroke-dashoffset:-1000; } }
+    .flow-line{ stroke-dasharray:10 8; animation:flow 22s linear infinite; }
+  </style>
+</head>
+<body>
+  <div class="title-card">
+    <h1>Mapping Conflict Visualization in Belfast</h1>
+    <p>The peace walls of Belfast and beyond. Click a number to fly to a wall and read its story.</p>
+  </div>
+  <div class="legend">
+    <h2>Legend</h2>
+    <div class="row"><span class="sw wall"></span> Peace wall</div>
+    <div class="row"><span class="sw mainwall"></span> Main wall (muralism)</div>
+    <div class="row"><span class="citydot"></span> Main place / city</div>
+    <div class="row"><span class="sw conn"></span> Connection</div>
+  </div>
+  <button class="reset-btn" onclick="resetView()">Back to all walls</button>
+  <div id="map"></div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    var map = L.map("map").setView([54.7,-6.4], 9);
+    L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",{maxZoom:19,attribution:"Imagery (c) Esri"}).addTo(map);
+    L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}",{maxZoom:19,opacity:0.9}).addTo(map);
+
+    function clean(v){ return (v===null||v===undefined)?"":String(v).trim(); }
+    function isMain(p){ return clean(p.label).toUpperCase().indexOf("MAIN")>-1 || clean(p.Name).toUpperCase().indexOf("MAIN")>-1 || clean(p.Description).toUpperCase().indexOf("MAIN")>-1; }
+    function popupHtml(p,n){
+      var name=(clean(p.Name)||clean(p.label)||"Peace wall"); if(n) name+=" (#"+n+")";
+      var hc=isMain(p)?"main":"wall";
+      var h='<div class="pop"><div class="hdr '+hc+'"><div class="name">'+name+'</div></div><div class="body">';
+      if(clean(p.Description)) h+='<div class="desc">'+clean(p.Description)+'</div>';
+      return h+'</div></div>';
+    }
+
+    var wallBounds=[]; var allBounds=null; var count=0;
+
+    function addWalls(data){
+      var layer=L.geoJSON(data,{
+        style:function(f){ var p=f.properties||{}; return isMain(p)?{color:"#c04dff",weight:6,opacity:1}:{color:"#ff8a3d",weight:5,opacity:0.95}; },
+        onEachFeature:function(f,lyr){
+          var p=f.properties||{}; count++; var n=count; var main=isMain(p);
+          lyr.bindPopup(popupHtml(p,n));
+          var c=lyr.getBounds().getCenter();
+          var icon=L.divIcon({html:'<div class="num-icon'+(main?" main":"")+'">'+n+'</div>',className:"",iconSize:[24,24]});
+          var mk=L.marker(c,{icon:icon}).addTo(map);
+          mk.bindPopup(popupHtml(p,n));
+          (function(bb){ mk.on("click",function(){ map.flyToBounds(bb,{maxZoom:17,padding:[40,40]}); }); })(lyr.getBounds());
+          wallBounds.push(lyr.getBounds());
+        }
+      }).addTo(map);
+    }
+
+    function curve(a,b){ var o=Math.hypot(b[0]-a[0],b[1]-a[1])*0.2; var m=[(a[0]+b[0])/2+o,(a[1]+b[1])/2]; var pts=[]; for(var t=0;t<=40;t++){var u=t/40; pts.push([(1-u)*(1-u)*a[0]+2*(1-u)*u*m[0]+u*u*b[0],(1-u)*(1-u)*a[1]+2*(1-u)*u*m[1]+u*u*b[1]]);} return pts; }
+    function addCities(data){
+      var mainLL=null; var conn=[];
+      (data.features||[]).forEach(function(f){
+        var p=f.properties||{}; var c=f.geometry.coordinates; var ll=[c[1],c[0]];
+        var main=(clean(p.Description).toUpperCase().indexOf("MAIN")>-1)||(clean(p.type).toLowerCase()==="within");
+        if(main){ mainLL=ll; } else { conn.push(ll); }
+        var sz=main?24:16; var col=main?"#c04dff":"#00e5ff";
+        var dot=L.divIcon({html:'<div style="width:'+sz+'px;height:'+sz+'px;border-radius:50%;background:'+col+';border:3px solid #fff;"></div>',className:"",iconSize:[sz,sz]});
+        L.marker(ll,{icon:dot,zIndexOffset:800}).addTo(map).bindPopup(popupHtml(p));
+      });
+      if(mainLL){ conn.forEach(function(ll){
+        var path=curve([mainLL[0],mainLL[1]],[ll[0],ll[1]]);
+        L.polyline(path,{color:"#002b36",weight:8,opacity:0.5}).addTo(map);
+        L.polyline(path,{color:"#00e5ff",weight:4,opacity:1,className:"flow-line"}).addTo(map);
+      }); }
+    }
+
+    function fitAll(){ if(!wallBounds.length) return; allBounds=wallBounds[0]; for(var i=1;i<wallBounds.length;i++){ allBounds=allBounds.extend(wallBounds[i]); } map.fitBounds(allBounds,{padding:[60,60]}); }
+    window.resetView=function(){ if(allBounds){ map.flyToBounds(allBounds,{padding:[60,60]}); } };
+
+    function load(file, cb){ fetch(file).then(function(r){return r.json();}).then(cb).catch(function(e){ console.warn(file,e); }); }
+
+    load("lines.geojson", function(d){
+      addWalls(d);
+      load("points.geojson", function(d2){
+        addWalls(d2);
+        load("places.geojson", function(d3){ addCities(d3); fitAll(); });
+      });
+    });
+  </script>
+</body>
+</html>
