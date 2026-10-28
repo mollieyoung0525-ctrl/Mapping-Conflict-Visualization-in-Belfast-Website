@@ -30,7 +30,7 @@ Murals simultaneously reflect and shape the political situation (Cook, 2018). Pl
 
 Two prominent examples of this on my map, one from a nationalist perspective and one from a loyalist perspective, are the tracking of the Falls Road International Wall Mural and Gateway to Shankill Road narrative shifts. In 2002, the Falls Road International Wall was made up of Anti-war messaging in response to the U.S. presence in Afghanistan. More recently in 2022, the wall exhibits strong republican ideologies calling for a United Ireland and featuring Bobby Sands. In 1999, the Gateway to Shankill Road honored Loyalist paramilitary groups with depictions of weapons and loyalist imagery. In 2022, the mural claims Shankill as “original Belfast” with a crown replacing the dot of the “i” in Shankill and shifts towards imagery of community celebration. 
 
-![a short caption](images/BelfastWall3.jpg)
+![a short caption](images/BelfastWalls5.jpg.png)
 
 In both cases, mural narratives have tended to shift away from violent imagery in favor of community identification. In this sense, division is still created but through ideological markers rather than physical expressions of violence. Engaging in this sort of mural change tracking over time, we can better understand how communities express themselves, maintain their identities, and navigate the complex path of post-conflict evolution. 
 
