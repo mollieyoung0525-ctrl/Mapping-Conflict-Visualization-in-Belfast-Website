@@ -7,7 +7,7 @@ A spatial history of your place and the places it was tied to.
 <iframe src="map/" width="100%" height="520"
 style="border:1px solid #ccc; border-radius:8px;"></iframe>
 
-## The Essay
+## Visual and Spatial Approaches to Peace and Conflict: Belfast’s Peace Walls and Murals
 
 Introduction:
 
