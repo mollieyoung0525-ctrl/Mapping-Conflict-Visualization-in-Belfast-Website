@@ -1,3 +1,8 @@
+---
+layout: default
+---
+{% include nav.html %}
+
 # Mapping Conflict Visualization in Belfast 
 
 A spatial history of your place and the places it was tied to.
