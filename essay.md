@@ -10,7 +10,7 @@ What does it truly mean for a conflict to be over? Just because there is an abse
 
 This is the question that I examine through my map, “Mapping Conflict Visualization in Belfast and Beyond.” 
 
-![a short caption](images/BelfastWall.jpg)
+![Example of how public memory of the conflict is preserved through peacewall muralism](images/BelfastWall.jpg)
 
 My map examines Belfast, Northern Ireland with particular attention to the visual rhetoric of its peacewalls to show how conflict is not just political, it is something that is seen, lived, and actively mapped onto the spaces that it occurs within. Built environments are not passive. But rather the structures like walls, checkpoints, and barriers that make up these spaces are “symbols of violence threat and inequality”[^1]. This symbiotic relationship between space and conflict is particularly potent in Belfast, where the peace walls that formerly functioned as necessary barriers between loyalist and republican communities engaged in sectarian violence still stand as sites of physical reminders of division and simultaneously spaces of public expression through murals and urban graffiti that represent the identity, memory and power of respective communities and shape how people still experience structural division daily. 
 
@@ -18,7 +18,7 @@ My map examines Belfast, Northern Ireland with particular attention to the visua
 
 This idea, then, connects Belfast to other post conflict cities across the world that struggle with these same ideas of cultural violence. I specifically chose to examine this connection to Belfast in Berlin, Cyprus, the Gaza strip, and two other major Northern Irish cities– Derry/Londonderry and Portadown. 
 
-![a short caption](images/BelfastWall2.jpg)
+![Aerial view of the main peacewall that divides Loyalist and Republican communities in West Belfast](images/BelfastWall2.jpg)
 
 ## How I examine these ideas
 
