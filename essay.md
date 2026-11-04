@@ -3,6 +3,7 @@ layout: default
 title: The Essay
 ---
 {% include nav.html %}
+
 ## Introduction
 
 What does it truly mean for a conflict to be over? Just because there is an absence of physical violence or a formal government cessation of violence, does not mean that violence, then, is no longer felt in the day to day lives of those living in the aftermaths of a conflict. 
@@ -11,7 +12,9 @@ This is the question that I examine through my map, “Mapping Conflict Visualiz
 
 ![a short caption](images/BelfastWall.jpg)
 
-My map examines Belfast, Northern Ireland with particular attention to the visual rhetoric of its peacewalls to show how conflict is not just political, it is something that is seen, lived, and actively mapped onto the spaces that it occurs within. Built environments are not passive. But rather the structures like walls, checkpoints, and barriers that make up these spaces are “symbols of violence threat and inequality” (Kothari, 2006). This symbiotic relationship between space and conflict is particularly potent in Belfast, where the peace walls that formerly functioned as necessary barriers between loyalist and republican communities engaged in sectarian violence still stand as sites of physical reminders of division and simultaneously spaces of public expression through murals and urban graffiti that represent the identity, memory and power of respective communities and shape how people still experience structural division daily. 
+My map examines Belfast, Northern Ireland with particular attention to the visual rhetoric of its peacewalls to show how conflict is not just political, it is something that is seen, lived, and actively mapped onto the spaces that it occurs within. Built environments are not passive. But rather the structures like walls, checkpoints, and barriers that make up these spaces are “symbols of violence threat and inequality”[^1]. This symbiotic relationship between space and conflict is particularly potent in Belfast, where the peace walls that formerly functioned as necessary barriers between loyalist and republican communities engaged in sectarian violence still stand as sites of physical reminders of division and simultaneously spaces of public expression through murals and urban graffiti that represent the identity, memory and power of respective communities and shape how people still experience structural division daily. 
+
+[^1]: Kothari, U. (2006). Spatial practices and imaginaries: Experiences of colonial officers and development professionals. Singapore Journal of Tropical Geography, 27(3), 235–253. https://doi.org/10.1111/j.1467-9493.2006.00260.x
 
 This idea, then, connects Belfast to other post conflict cities across the world that struggle with these same ideas of cultural violence. I specifically chose to examine this connection to Belfast in Berlin, Cyprus, the Gaza strip, and two other major Northern Irish cities– Derry/Londonderry and Portadown. 
 
