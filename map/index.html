@@ -31,6 +31,7 @@
     .pop .hdr .name{ font-size:1.05rem; font-weight:700; color:#fff; }
     .pop .body{ padding:12px 15px; }
     .pop .desc{ font-size:0.88rem; line-height:1.5; color:#dfe7f7; }
+    .pop .date{ font-size:0.78rem; color:#9fb3d9; margin-bottom:6px; }
     .reset-btn{ position:absolute; bottom:24px; left:16px; z-index:1000; background:rgba(10,14,28,0.86); color:#eaf0ff; border:1px solid rgba(255,255,255,0.18); border-radius:8px; padding:8px 14px; cursor:pointer; font-size:0.82rem; }
     @keyframes flow { to { stroke-dashoffset:-1000; } }
     .flow-line{ stroke-dasharray:10 8; animation:flow 22s linear infinite; }
@@ -58,31 +59,44 @@
     L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}",{maxZoom:19,opacity:0.9}).addTo(map);
 
     function clean(v){ return (v===null||v===undefined)?"":String(v).trim(); }
-    function isMain(p){ return clean(p.label).toUpperCase().indexOf("MAIN")>-1 || clean(p.Name).toUpperCase().indexOf("MAIN")>-1 || clean(p.Description).toUpperCase().indexOf("MAIN")>-1; }
+    function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+
+    // A wall is the MAIN wall only if the capital word MAIN is in its label or Name,
+    // for example the label "MAIN Peacewall". Words like "remain" or "mainly" in the
+    // Description no longer count.
+    function isMain(p){ return /\bMAIN\b/.test(clean(p.label)) || /\bMAIN\b/.test(clean(p.Name)); }
+
     function popupHtml(p,n){
       var name=(clean(p.Name)||clean(p.label)||"Peace wall"); if(n) name+=" (#"+n+")";
       var hc=isMain(p)?"main":"wall";
-      var h='<div class="pop"><div class="hdr '+hc+'"><div class="name">'+name+'</div></div><div class="body">';
-      if(clean(p.Description)) h+='<div class="desc">'+clean(p.Description)+'</div>';
+      var date=clean(p.Date); if(date.toLowerCase()==="none") date="";
+      var h='<div class="pop"><div class="hdr '+hc+'"><div class="name">'+esc(name)+'</div></div><div class="body">';
+      if(date) h+='<div class="date">'+esc(date)+'</div>';
+      if(clean(p.Description)) h+='<div class="desc">'+esc(clean(p.Description))+'</div>';
       return h+'</div></div>';
     }
 
-    var wallBounds=[]; var allBounds=null; var count=0;
+    var wallBounds=[]; var allBounds=null; var count=0; var seen={};
 
     function addWalls(data){
-      var layer=L.geoJSON(data,{
-        style:function(f){ var p=f.properties||{}; return isMain(p)?{color:"#c04dff",weight:6,opacity:1}:{color:"#ff8a3d",weight:5,opacity:0.95}; },
-        onEachFeature:function(f,lyr){
-          var p=f.properties||{}; count++; var n=count; var main=isMain(p);
+      (data.features||[]).forEach(function(f){
+        var g=f.geometry; if(!g) return;
+        var key=JSON.stringify(g); if(seen[key]) return; seen[key]=true;   // skip a shape that was already drawn
+        var p=f.properties||{}; count++; var n=count; var main=isMain(p);
+        var bounds, center;
+        if(g.type==="Point"){
+          var pt=[g.coordinates[1],g.coordinates[0]]; bounds=L.latLngBounds([pt,pt]); center=pt;
+        } else {
+          var lyr=L.geoJSON(f,{style:function(){ return main?{color:"#c04dff",weight:6,opacity:1}:{color:"#ff8a3d",weight:5,opacity:0.95}; }}).addTo(map);
           lyr.bindPopup(popupHtml(p,n));
-          var c=lyr.getBounds().getCenter();
-          var icon=L.divIcon({html:'<div class="num-icon'+(main?" main":"")+'">'+n+'</div>',className:"",iconSize:[24,24]});
-          var mk=L.marker(c,{icon:icon}).addTo(map);
-          mk.bindPopup(popupHtml(p,n));
-          (function(bb){ mk.on("click",function(){ map.flyToBounds(bb,{maxZoom:17,padding:[40,40]}); }); })(lyr.getBounds());
-          wallBounds.push(lyr.getBounds());
+          bounds=lyr.getBounds(); center=bounds.getCenter();
         }
-      }).addTo(map);
+        var icon=L.divIcon({html:'<div class="num-icon'+(main?" main":"")+'">'+n+'</div>',className:"",iconSize:[24,24]});
+        var mk=L.marker(center,{icon:icon}).addTo(map);
+        mk.bindPopup(popupHtml(p,n));
+        mk.on("click",function(){ map.flyToBounds(bounds,{maxZoom:17,padding:[40,40]}); });
+        wallBounds.push(L.latLngBounds(bounds.getSouthWest(),bounds.getNorthEast()));
+      });
     }
 
     function curve(a,b){ var o=Math.hypot(b[0]-a[0],b[1]-a[1])*0.2; var m=[(a[0]+b[0])/2+o,(a[1]+b[1])/2]; var pts=[]; for(var t=0;t<=40;t++){var u=t/40; pts.push([(1-u)*(1-u)*a[0]+2*(1-u)*u*m[0]+u*u*b[0],(1-u)*(1-u)*a[1]+2*(1-u)*u*m[1]+u*u*b[1]]);} return pts; }
@@ -90,7 +104,7 @@
       var mainLL=null; var conn=[];
       (data.features||[]).forEach(function(f){
         var p=f.properties||{}; var c=f.geometry.coordinates; var ll=[c[1],c[0]];
-        var main=(clean(p.Description).toUpperCase().indexOf("MAIN")>-1)||(clean(p.type).toLowerCase()==="within");
+        var main=/\bMAIN\b/.test(clean(p.Description))||(clean(p.type).toLowerCase()==="within");
         if(main){ mainLL=ll; } else { conn.push(ll); }
         var sz=main?24:16; var col=main?"#c04dff":"#00e5ff";
         var dot=L.divIcon({html:'<div style="width:'+sz+'px;height:'+sz+'px;border-radius:50%;background:'+col+';border:3px solid #fff;"></div>',className:"",iconSize:[sz,sz]});
@@ -103,17 +117,16 @@
       }); }
     }
 
-    function fitAll(){ if(!wallBounds.length) return; allBounds=wallBounds[0]; for(var i=1;i<wallBounds.length;i++){ allBounds=allBounds.extend(wallBounds[i]); } map.fitBounds(allBounds,{padding:[60,60]}); }
+    function fitAll(){ if(!wallBounds.length) return; allBounds=L.latLngBounds(wallBounds[0].getSouthWest(),wallBounds[0].getNorthEast()); for(var i=1;i<wallBounds.length;i++){ allBounds.extend(wallBounds[i]); } map.fitBounds(allBounds,{padding:[60,60]}); }
     window.resetView=function(){ if(allBounds){ map.flyToBounds(allBounds,{padding:[60,60]}); } };
 
-    function load(file, cb){ fetch(file).then(function(r){return r.json();}).then(cb).catch(function(e){ console.warn(file,e); }); }
-
-    load("lines.geojson", function(d){
-      addWalls(d);
-      load("points.geojson", function(d2){
-        addWalls(d2);
-        load("places.geojson", function(d3){ addCities(d3); fitAll(); });
-      });
+    // Each file loads on its own, so a missing file no longer stops the others.
+    function load(file){ return fetch(file).then(function(r){ if(!r.ok){ throw new Error(file+" "+r.status); } return r.json(); }); }
+    Promise.allSettled([load("lines.geojson"), load("points.geojson"), load("places.geojson")]).then(function(res){
+      if(res[0].status==="fulfilled"){ addWalls(res[0].value); } else { console.warn(res[0].reason); }
+      if(res[1].status==="fulfilled"){ addWalls(res[1].value); } else { console.warn(res[1].reason); }
+      if(res[2].status==="fulfilled"){ addCities(res[2].value); } else { console.warn(res[2].reason); }
+      fitAll();
     });
   </script>
 </body>
