@@ -5,7 +5,7 @@ layout: default
 
 # Mapping Conflict Visualization in Belfast 
 
-A spatial history of your place and the places it was tied to.
+A spatial history of Belfast throughout its almost 30 year peace process. 
 
 ## The Map
 
