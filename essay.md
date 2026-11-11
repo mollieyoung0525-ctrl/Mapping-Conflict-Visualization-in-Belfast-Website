@@ -35,8 +35,6 @@ Two prominent examples of this on my map, one from a nationalist perspective and
 In both cases, mural narratives have tended to shift away from violent imagery in favor of community identification. In this sense, division is still created but through ideological markers rather than physical expressions of violence. Engaging in this sort of mural change tracking over time, we can better understand how communities express themselves, maintain their identities, and navigate the complex path of post-conflict evolution. 
 
 
-![a short caption](images/BelfastWall4.jpg)
-
 ## Shadows of division
 
 Beyond muralism practice, my map aims to visualize the effects that the continued presence of walls that serve as a reminder of a time of physical violence has on the communities they exist within. Throughout Belfast, the peacewalls that still stand, “play both positive and negative roles in controlling access, use of space, and in creating a sense of security and belonging – or insecurity and exclusion – in the urban environment” (McAtackney 2011, 78). 
@@ -53,6 +51,8 @@ Peacewalls no longer serve as necessary means through which violence is prevente
 In Belfast, peace walls don’t just separate communities, they reinforce structural sectarian violence and division. People living closer to these walls have skewed experiences of division in their day to day lives and feel the continuous effects of sectarian division to a higher magnitude than those who live farther from said walls simply because their immediate environment is full of symbols and images that tell the history of conflict and express the current political climate.
 
 On my map, the controversy that surrounds this idea of walls reinforcing structural violence is shown through the walls I kept on my map even though they have now been partially removed, fully demolished, or repurposed. Wall 14, for example, which used to run along the Crumlin Road in West Belfast, was partially removed in 2016  as a part of a community integration and landscape restoration project. This then serves as an example of how Belfast’s conflict visualization landscape is actively changing as community attitudes towards the peacewalls continue to shift. 
+
+![a short caption](images/BelfastWall4.jpg)
 
 Since my map aims to balance community attitudes, it also includes a number of walls that continue to stand today due to the positive role they play in community engagement and expression. One point on my map, the “International Solidarity Wall,” on the Falls side of the main peacewall, is one such example of a wall that communities wish to protect rather than tear down. 
 
