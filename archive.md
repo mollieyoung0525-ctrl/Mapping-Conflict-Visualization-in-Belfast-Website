@@ -7,10 +7,10 @@ title: Image Archive
 
 Photographs and images of the peacewalls and the changing landscape of art on them throughout time.
 
-<div style="display:flex; flex-wrap:wrap; gap:20px;">
+<div style="display:flex; flex-wrap:wrap; gap:20;">
 {% for img in site.data.archive %}
-  <figure style="width:280px; margin:0;">
-    <img src="images/{{ img.file }}" alt="{{ img.alt }}" style="width:100%;">
+  <figure style="width:100; margin:0;">
+    <img src="images/{{ img.file }}" alt="{{ img.alt }}" style="width:100;">
     <figcaption><strong>{{ img.title }}</strong><br>{{ img.date }}. Source: {{ img.source }}.</figcaption>
   </figure>
 {% endfor %}
