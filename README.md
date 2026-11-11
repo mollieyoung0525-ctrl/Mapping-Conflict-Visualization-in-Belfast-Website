@@ -1,1 +1,1 @@
-# Mapping-Conflict-Visualization-in-Belfast-Website
+# Mapping Conflict Visualization in Belfast Website
